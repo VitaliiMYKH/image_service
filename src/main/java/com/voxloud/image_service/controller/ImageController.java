@@ -1,7 +1,9 @@
 package com.voxloud.image_service.controller;
 
+import com.voxloud.image_service.dto.ImageRequestDto;
 import com.voxloud.image_service.dto.ImageResponseDto;
 import com.voxloud.image_service.model.Account;
+import com.voxloud.image_service.model.Image;
 import com.voxloud.image_service.service.AccountService;
 import com.voxloud.image_service.service.ImageService;
 import com.voxloud.image_service.service.mapper.ImageMapper;
@@ -12,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +32,13 @@ public class ImageController {
         this.imageService = imageService;
         this.accountService = accountService;
         this.imageMapper = imageMapper;
+    }
+
+    @PostMapping()
+    public List<ImageResponseDto> add(@RequestBody List<ImageRequestDto> imageRequestDto) {
+        List<Image> images = imageRequestDto.stream().map(imageMapper::mapToModel).collect(Collectors.toList());
+        List<Image> savedImages = imageService.addListOfImages(images);
+        return savedImages.stream().map(imageMapper::mapToDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -53,6 +64,7 @@ public class ImageController {
         return imageMapper.mapToDto(imageService.getByReference(reference));
 
     }
+
     @GetMapping("/by-contentType")
     public List<ImageResponseDto> getByContentType(@RequestParam String contentType) {
         return imageService.getByContentType(contentType)

@@ -1,6 +1,7 @@
 package com.voxloud.image_service.model;
 
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

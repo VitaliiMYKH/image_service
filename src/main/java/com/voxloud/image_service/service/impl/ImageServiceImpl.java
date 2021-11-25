@@ -3,22 +3,27 @@ package com.voxloud.image_service.service.impl;
 import com.voxloud.image_service.exception.DataProcessingException;
 import com.voxloud.image_service.model.Account;
 import com.voxloud.image_service.model.Image;
+import com.voxloud.image_service.model.Tag;
 import com.voxloud.image_service.repository.ImageRepository;
+import com.voxloud.image_service.repository.TagRepository;
 import com.voxloud.image_service.service.ImageService;
 import java.util.List;
+import java.util.Set;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
+    private final TagRepository tagRepository;
 
-    public ImageServiceImpl(ImageRepository imageRepository) {
+    public ImageServiceImpl(ImageRepository imageRepository, TagRepository tagRepository) {
         this.imageRepository = imageRepository;
+        this.tagRepository = tagRepository;
     }
 
     @Override
-    public Image add(Image image) {
-        return imageRepository.save(image);
+    public List<Image> addListOfImages(List<Image> images) {
+        return imageRepository.saveAll(images);
     }
 
     @Override
