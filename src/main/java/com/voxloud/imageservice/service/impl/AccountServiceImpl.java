@@ -2,8 +2,11 @@ package com.voxloud.imageservice.service.impl;
 
 import com.voxloud.imageservice.exception.DataProcessingException;
 import com.voxloud.imageservice.model.Account;
+import com.voxloud.imageservice.model.Image;
 import com.voxloud.imageservice.repository.AccountRepository;
+import com.voxloud.imageservice.repository.ImageRepository;
 import com.voxloud.imageservice.service.AccountService;
+import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +14,21 @@ import org.springframework.stereotype.Service;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ImageRepository imageRepository;
 
     public AccountServiceImpl(AccountRepository accountRepository,
-                              PasswordEncoder passwordEncoder) {
+                              PasswordEncoder passwordEncoder, ImageRepository imageRepository) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.imageRepository = imageRepository;
+    }
+
+
+    @Override
+    public Account updateAccount(Account account, List<Image> images) {
+        imageRepository.saveAll(images);
+        account.setImages(images);
+        return accountRepository.save(account);
     }
 
     @Override

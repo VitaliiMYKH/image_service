@@ -20,23 +20,23 @@ public class ImageMapper {
     public ImageResponseDto mapToDto(Image image) {
         ImageResponseDto imageResponseDto = new ImageResponseDto();
         imageResponseDto.setId(image.getId());
-        imageResponseDto.setAccountId(image.getAccount().getId());
+    //    imageResponseDto.setAccountId(image.getAccount().getId());
         imageResponseDto.setContentType(image.getContentType());
         imageResponseDto.setReference(image.getReference());
         imageResponseDto.setName(image.getName());
         imageResponseDto.setSize(image.getSize());
-        imageResponseDto.setTagId(imageResponseDto.getTagId());
+       /* imageResponseDto.setTagId(imageResponseDto.getTagId());*/
         return imageResponseDto;
     }
 
     public Image mapToModel(ImageRequestDto imageRequestDto) {
         Image image = new Image();
-        image.setAccount(accountService.getById(imageRequestDto.getAccountId()));
+     //   image.setAccount(accountService.getById(imageRequestDto.getAccountId()));
         image.setContentType(imageRequestDto.getContentType());
         image.setName(imageRequestDto.getName());
         image.setReference(imageRequestDto.getReference());
         image.setSize(imageRequestDto.getSize());
-        image.setTags(tagService.getTagsById(imageRequestDto.getTagId()));
+      /*  image.setTags(tagService.getTagsById(imageRequestDto.getTagId()));*/
         return image;
     }
 }

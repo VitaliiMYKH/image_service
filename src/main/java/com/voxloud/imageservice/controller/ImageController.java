@@ -36,50 +36,69 @@ public class ImageController {
         this.imageMapper = imageMapper;
     }
 
-    @PostMapping()
-    public List<ImageResponseDto> add(@RequestBody List<ImageRequestDto> imageRequestDto) {
+    @PostMapping("/add")
+    public List<ImageResponseDto> add(Authentication auth, @RequestBody List<ImageRequestDto> imageRequestDto) {
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+        String username = principal.getUsername();
+        Account account = accountService.getByLogin(username);
         List<Image> images = imageRequestDto.stream()
                 .map(imageMapper::mapToModel)
                 .collect(Collectors.toList());
-        List<Image> savedImages = imageService.addListOfImages(images);
+        List<Image> savedImages = imageService.addListOfImages(account, images);
         return savedImages.stream()
                 .map(imageMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ImageResponseDto getById(@PathVariable Long id) {
-        return imageMapper.mapToDto(imageService.getById(id));
+    public ImageResponseDto getById(Authentication auth, @PathVariable Long id) {
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+        String username = principal.getUsername();
+        Account account = accountService.getByLogin(username);
+        return imageMapper.mapToDto(imageService.getById(account, id));
     }
 
     @GetMapping("/by-name")
-    public ImageResponseDto getByName(@RequestParam String name) {
-        return imageMapper.mapToDto(imageService.getByName(name));
+    public ImageResponseDto getByName(Authentication auth, @RequestParam String name) {
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+        String username = principal.getUsername();
+        Account account = accountService.getByLogin(username);         //we need to check here account for null
+
+        return imageMapper.mapToDto(imageService.getByName(account, name));
     }
 
     @GetMapping("/by-size")
-    public List<ImageResponseDto> getBySize(@RequestParam Long size) {
-        return imageService.getBySize(size)
+    public List<ImageResponseDto> getBySize(Authentication auth, @RequestParam Long size) {
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+        String username = principal.getUsername();
+        Account account = accountService.getByLogin(username);
+        return imageService.getBySize(account, size)
                .stream()
                .map(imageMapper::mapToDto)
                .collect(Collectors.toList());
     }
 
     @GetMapping("/by-reference")
-    public ImageResponseDto getByReference(@RequestParam String reference) {
-        return imageMapper.mapToDto(imageService.getByReference(reference));
+    public ImageResponseDto getByReference(Authentication auth, @RequestParam String reference) {
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+        String username = principal.getUsername();
+        Account account = accountService.getByLogin(username);
+        return imageMapper.mapToDto(imageService.getByReference(account, reference));
 
     }
 
     @GetMapping("/by-contentType")
-    public List<ImageResponseDto> getByContentType(@RequestParam String contentType) {
-        return imageService.getByContentType(contentType)
+    public List<ImageResponseDto> getByContentType(Authentication auth, @RequestParam String contentType) {
+        UserDetails principal = (UserDetails) auth.getPrincipal();
+        String username = principal.getUsername();
+        Account account = accountService.getByLogin(username);
+        return imageService.getByContentType(account, contentType)
                 .stream()
                 .map(imageMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/by-account")
+    /*@GetMapping("/by-account")
     public List<ImageResponseDto> getByAccount(Authentication authentication) {
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         String username = principal.getUsername();
@@ -88,5 +107,5 @@ public class ImageController {
                 .stream()
                 .map(imageMapper::mapToDto)
                 .collect(Collectors.toList());
-    }
+    }*/
 }

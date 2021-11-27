@@ -21,8 +21,8 @@ public class Image {
     private Long size;
     private String reference;
     private String contentType;
-    @ManyToOne
-    private Account account;
-    @ManyToMany
-    private List<Tag> tags;
+   /* @ManyToOne
+    private Account account;*/
+   /* @ManyToMany
+    private List<Tag> tags;*/
 }

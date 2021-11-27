@@ -5,17 +5,17 @@ import com.voxloud.imageservice.model.Image;
 import java.util.List;
 
 public interface ImageService {
-    List<Image> addListOfImages(List<Image> image);
+    List<Image> addListOfImages(Account account, List<Image> image);
 
-    Image getById(Long id);
+    Image getById(Account account, Long id);
 
-    Image getByName(String name);
+    Image getByName(Account account, String name);
 
-    List<Image> getBySize(Long size);
+    List<Image> getBySize(Account account, Long size);
 
-    Image getByReference(String reference);
+    Image getByReference(Account account, String reference);
 
-    List<Image> getByContentType(String reference);
+    List<Image> getByContentType(Account account, String reference);
 
-    List<Image> getByAccount(Account account);
+  //  List<Image> getByAccount(Account account);
 }

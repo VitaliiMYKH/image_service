@@ -9,6 +9,6 @@ public class ImageRequestDto {
     private Long size;
     private String reference;
     private String contentType;
-    private Long accountId;
-    private List<Long> tagId;
+ //   private Long accountId;
+  /*  private List<Long> tagId;*/
 }
