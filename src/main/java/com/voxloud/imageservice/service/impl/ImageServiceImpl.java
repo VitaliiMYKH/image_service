@@ -3,11 +3,13 @@ package com.voxloud.imageservice.service.impl;
 import com.voxloud.imageservice.exception.DataProcessingException;
 import com.voxloud.imageservice.model.Account;
 import com.voxloud.imageservice.model.Image;
+import com.voxloud.imageservice.model.Tag;
 import com.voxloud.imageservice.repository.ImageRepository;
 import com.voxloud.imageservice.repository.TagRepository;
 import com.voxloud.imageservice.service.AccountService;
 import com.voxloud.imageservice.service.ImageService;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,7 +36,7 @@ public class ImageServiceImpl implements ImageService {
     public Image getById(Account account, Long id) {
         Image imageById = imageRepository.getById(id);
         if (account.getImages().contains(imageById)) {
-           return imageById;
+            return imageById;
         }
         throw new DataProcessingException("Can`t get Image, which is not in current account");
     }
@@ -55,10 +57,14 @@ public class ImageServiceImpl implements ImageService {
         if (sameSizeImages.isEmpty()) {
             throw new DataProcessingException("Can`t get images by size: " + size);
         }
-        if (account.getImages().contains(sameSizeImages.get(0))) {
-            return sameSizeImages;
+        List<Image> accountImagesBySize = account.getImages()
+                .stream()
+                .filter(sameSizeImages::contains)
+                .collect(Collectors.toList());
+        if (accountImagesBySize.isEmpty()) {
+            throw new DataProcessingException("Can`t get Image, which is not in current account");
         }
-        throw new DataProcessingException("Can`t get Image, which is not in current account");
+        return accountImagesBySize;
     }
 
     @Override
@@ -78,19 +84,29 @@ public class ImageServiceImpl implements ImageService {
         if (sameContentTypeImages.isEmpty()) {
             throw new DataProcessingException("Can`t get images by contentType: " + contentType);
         }
-        if (account.getImages().contains(sameContentTypeImages.get(0))) {
-            return sameContentTypeImages;
+        List<Image> accountImagesByContentType = account.getImages()
+                .stream()
+                .filter(sameContentTypeImages::contains)
+                .collect(Collectors.toList());
+        if (accountImagesByContentType.isEmpty()) {
+            throw new DataProcessingException("Can`t get Image, which is not in current account");
         }
-        throw new DataProcessingException("Can`t get Image, which is not in current account");
+        return accountImagesByContentType;
     }
 
-
-  /*  @Override
-    public List<Image> getByAccount(Account account) {
-        List<Image> sameAccountImages = imageRepository.getByAccount(account);
-        if (sameAccountImages.isEmpty()) {
-            throw new DataProcessingException("Can`t get images by account: " + account);
+    @Override
+    public List<Image> getImageByTag(Account account, Tag tag) {
+        List<Image> imageByTags = imageRepository.getImageByTags(tag);
+        if (imageByTags.isEmpty()) {
+            throw new DataProcessingException("Can`t get Images with tag: " + tag);
         }
-        return sameAccountImages;
-    }*/
+        List<Image> accountImagesByTag = account.getImages()
+                .stream()
+                .filter(imageByTags::contains)
+                .collect(Collectors.toList());
+        if (accountImagesByTag.isEmpty()) {
+            throw new DataProcessingException("Can`t get images which is not in current account");
+        }
+        return accountImagesByTag;
+    }
 }

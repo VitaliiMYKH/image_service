@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 
@@ -21,8 +20,6 @@ public class Image {
     private Long size;
     private String reference;
     private String contentType;
-   /* @ManyToOne
-    private Account account;*/
-   /* @ManyToMany
-    private List<Tag> tags;*/
+    @ManyToMany
+    private List<Tag> tags;
 }

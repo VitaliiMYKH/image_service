@@ -23,7 +23,6 @@ public class AccountServiceImpl implements AccountService {
         this.imageRepository = imageRepository;
     }
 
-
     @Override
     public Account updateAccount(Account account, List<Image> images) {
         imageRepository.saveAll(images);

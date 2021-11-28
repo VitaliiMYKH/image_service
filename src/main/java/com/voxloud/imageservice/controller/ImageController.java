@@ -4,8 +4,10 @@ import com.voxloud.imageservice.dto.ImageRequestDto;
 import com.voxloud.imageservice.dto.ImageResponseDto;
 import com.voxloud.imageservice.model.Account;
 import com.voxloud.imageservice.model.Image;
+import com.voxloud.imageservice.model.Tag;
 import com.voxloud.imageservice.service.AccountService;
 import com.voxloud.imageservice.service.ImageService;
+import com.voxloud.imageservice.service.TagService;
 import com.voxloud.imageservice.service.mapper.ImageMapper;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,18 +28,21 @@ public class ImageController {
     private final ImageService imageService;
     private final AccountService accountService;
     private final ImageMapper imageMapper;
+    private final TagService tagService;
 
     @Autowired
     public ImageController(ImageService imageService,
                            AccountService accountService,
-                           ImageMapper imageMapper) {
+                           ImageMapper imageMapper, TagService tagService) {
         this.imageService = imageService;
         this.accountService = accountService;
         this.imageMapper = imageMapper;
+        this.tagService = tagService;
     }
 
     @PostMapping("/add")
-    public List<ImageResponseDto> add(Authentication auth, @RequestBody List<ImageRequestDto> imageRequestDto) {
+    public List<ImageResponseDto> add(Authentication auth,
+                                      @RequestBody List<ImageRequestDto> imageRequestDto) {
         UserDetails principal = (UserDetails) auth.getPrincipal();
         String username = principal.getUsername();
         Account account = accountService.getByLogin(username);
@@ -62,8 +67,7 @@ public class ImageController {
     public ImageResponseDto getByName(Authentication auth, @RequestParam String name) {
         UserDetails principal = (UserDetails) auth.getPrincipal();
         String username = principal.getUsername();
-        Account account = accountService.getByLogin(username);         //we need to check here account for null
-
+        Account account = accountService.getByLogin(username);
         return imageMapper.mapToDto(imageService.getByName(account, name));
     }
 
@@ -88,7 +92,8 @@ public class ImageController {
     }
 
     @GetMapping("/by-contentType")
-    public List<ImageResponseDto> getByContentType(Authentication auth, @RequestParam String contentType) {
+    public List<ImageResponseDto> getByContentType(Authentication auth,
+                                                   @RequestParam String contentType) {
         UserDetails principal = (UserDetails) auth.getPrincipal();
         String username = principal.getUsername();
         Account account = accountService.getByLogin(username);
@@ -98,14 +103,15 @@ public class ImageController {
                 .collect(Collectors.toList());
     }
 
-    /*@GetMapping("/by-account")
-    public List<ImageResponseDto> getByAccount(Authentication authentication) {
-        UserDetails principal = (UserDetails) authentication.getPrincipal();
+    @GetMapping("by-tagName")
+    public List<ImageResponseDto> getByTagName(Authentication auth, @RequestParam String tagName) {
+        UserDetails principal = (UserDetails) auth.getPrincipal();
         String username = principal.getUsername();
         Account account = accountService.getByLogin(username);
-        return imageService.getByAccount(account)
+        Tag tagByTagName = tagService.getTagByTagName(tagName);
+        return imageService.getImageByTag(account, tagByTagName)
                 .stream()
                 .map(imageMapper::mapToDto)
                 .collect(Collectors.toList());
-    }*/
+    }
 }

@@ -24,7 +24,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     public AuthenticationServiceImpl(AccountRepository accountRepository,
                                      RoleService roleService,
-                                     PasswordEncoder passwordEncoder, ImageService imageService, AccountService accountService) {
+                                     PasswordEncoder passwordEncoder,
+                                     ImageService imageService,
+                                     AccountService accountService) {
         this.accountRepository = accountRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
@@ -38,10 +40,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         account.setLogin(login);
         account.setPassword(passwordEncoder.encode(password));
         account.setRoles(Set.of(roleService.getRoleByRoleName("USER")));
-       // accountRepository.save(account);
         Image image = new Image();
         imageService.addListOfImages(account, List.of(image));
         return accountService.getByLogin(login);
-    //    account.setImages(List.of(image));
     }
 }

@@ -2,6 +2,7 @@ package com.voxloud.imageservice.service;
 
 import com.voxloud.imageservice.model.Account;
 import com.voxloud.imageservice.model.Image;
+import com.voxloud.imageservice.model.Tag;
 import java.util.List;
 
 public interface ImageService {
@@ -17,5 +18,6 @@ public interface ImageService {
 
     List<Image> getByContentType(Account account, String reference);
 
-  //  List<Image> getByAccount(Account account);
+    List<Image> getImageByTag(Account account, Tag tag);
+
 }
