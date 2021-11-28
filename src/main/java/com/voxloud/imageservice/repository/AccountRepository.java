@@ -12,4 +12,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("select a from Account a join fetch a.roles "
             + "join fetch a.images where LOWER(a.login) = LOWER(:login)")
     Optional<Account> getByLogin(@Param("login") String login);
+
+    Optional<Account> getAccountById(Long id);
 }

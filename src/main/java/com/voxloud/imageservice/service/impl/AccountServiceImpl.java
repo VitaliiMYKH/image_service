@@ -17,7 +17,8 @@ public class AccountServiceImpl implements AccountService {
     private final ImageRepository imageRepository;
 
     public AccountServiceImpl(AccountRepository accountRepository,
-                              PasswordEncoder passwordEncoder, ImageRepository imageRepository) {
+                              PasswordEncoder passwordEncoder,
+                              ImageRepository imageRepository) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.imageRepository = imageRepository;
@@ -39,7 +40,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getById(Long id) {
-        return accountRepository.getById(id);
+        return accountRepository.getAccountById(id)
+                .orElseThrow(() -> new DataProcessingException("Can`t find in"
+                + " database account with id: " + id));
     }
 
     @Override
