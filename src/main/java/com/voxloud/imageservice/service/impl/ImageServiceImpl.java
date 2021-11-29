@@ -9,6 +9,7 @@ import com.voxloud.imageservice.repository.TagRepository;
 import com.voxloud.imageservice.service.AccountService;
 import com.voxloud.imageservice.service.ImageService;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,9 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image getById(Account account, Long id) {
-        Image imageById = imageRepository.getById(id);
+        Optional<Image> optionalImageById = imageRepository.getImageById(id);
+        Image imageById = optionalImageById
+                .orElseThrow(() -> new DataProcessingException("Can`t get image by id " + id));
         if (account.getImages().contains(imageById)) {
             return imageById;
         }
@@ -82,7 +85,7 @@ public class ImageServiceImpl implements ImageService {
     public List<Image> getByContentType(Account account, String contentType) {
         List<Image> sameContentTypeImages = imageRepository.getByContentType(contentType);
         if (sameContentTypeImages.isEmpty()) {
-            throw new DataProcessingException("Can`t get images by contentType: " + contentType);
+            throw new DataProcessingException("Can`t get images by content type: " + contentType);
         }
         List<Image> accountImagesByContentType = account.getImages()
                 .stream()

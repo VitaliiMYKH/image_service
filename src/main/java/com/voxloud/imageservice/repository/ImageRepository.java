@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public interface ImageRepository extends JpaRepository<Image, Long> {
 
-    Image getById(Long id);
+    Optional<Image> getImageById(Long id);
 
     Optional<Image> getByName(String name);
 
